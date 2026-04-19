@@ -23,7 +23,7 @@ image = image.resize((512, 512))
 
 # 5. 生成油画风格的图片
 result = pipe(
-    prompt="oil painting, painterly, thick brush strokes, detailed cat face, warm colors",
+    prompt="oil painting, thick impasto brushstrokes, painterly, warm golden tones, detailed fur texture, fine art",
     image=image,
     strength=0.45,
     guidance_scale=7.5,
