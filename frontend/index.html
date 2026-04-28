@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PetPaint — Oil Painting Portraits for Your Pet</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --cream: #FAF7F2;
+      --warm-brown: #6B4226;
+      --light-brown: #C49A6C;
+      --dark: #1C1410;
+      --muted: #8C7B6E;
+      --border: rgba(107, 66, 38, 0.15);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      min-height: 100vh;
+    }
+
+    nav {
+      padding: 1.5rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.4rem;
+      color: var(--warm-brown);
+      letter-spacing: -0.01em;
+    }
+
+    .nav-cta {
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--warm-brown);
+      text-decoration: none;
+      border: 1px solid var(--warm-brown);
+      padding: 0.5rem 1.2rem;
+      border-radius: 100px;
+      transition: all 0.2s;
+    }
+
+    .nav-cta:hover {
+      background: var(--warm-brown);
+      color: var(--cream);
+    }
+
+    .hero {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 6rem 2rem 4rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+
+    .hero-text h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.2rem, 4vw, 3.2rem);
+      line-height: 1.2;
+      color: var(--dark);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero-text h1 em {
+      color: var(--warm-brown);
+      font-style: italic;
+    }
+
+    .hero-text p {
+      font-size: 1.05rem;
+      line-height: 1.7;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .hero-image {
+      position: relative;
+    }
+
+    .image-compare {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .img-card {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: white;
+    }
+
+    .img-card-label {
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .img-placeholder {
+      aspect-ratio: 1;
+      background: linear-gradient(135deg, #E8DDD0 0%, #D4C4B0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.5rem;
+    }
+
+    .img-placeholder.painted {
+      background: linear-gradient(135deg, #C49A6C 0%, #8B5E3C 50%, #4A2C0A 100%);
+    }
+
+    .arrow-divider {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 32px;
+      height: 32px;
+      background: var(--warm-brown);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 0.9rem;
+      z-index: 1;
+      box-shadow: 0 2px 8px rgba(107,66,38,0.3);
+    }
+
+    .waitlist-form {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .waitlist-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 0.75rem 1.2rem;
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      background: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--dark);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .waitlist-form input:focus {
+      border-color: var(--warm-brown);
+    }
+
+    .waitlist-form input::placeholder {
+      color: var(--muted);
+    }
+
+    .btn-primary {
+      padding: 0.75rem 1.8rem;
+      background: var(--warm-brown);
+      color: var(--cream);
+      border: none;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-primary:hover {
+      background: #5A3520;
+      transform: translateY(-1px);
+    }
+
+    .form-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.75rem;
+    }
+
+    .divider {
+      max-width: 960px;
+      margin: 0 auto;
+      border: none;
+      border-top: 1px solid var(--border);
+    }
+
+    .what-section {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 5rem 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    .section-label {
+      font-size: 0.72rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--light-brown);
+      margin-bottom: 1.2rem;
+    }
+
+    .what-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      line-height: 1.25;
+      margin-bottom: 1.2rem;
+    }
+
+    .what-section p {
+      color: var(--muted);
+      line-height: 1.75;
+      font-weight: 300;
+      font-size: 1rem;
+    }
+
+    .diff-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .diff-item {
+      display: flex;
+      gap: 1rem;
+      align-items: flex-start;
+    }
+
+    .diff-icon {
+      width: 36px;
+      height: 36px;
+      background: rgba(107, 66, 38, 0.08);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+
+    .diff-item h3 {
+      font-size: 0.95rem;
+      font-weight: 500;
+      margin-bottom: 0.3rem;
+    }
+
+    .diff-item p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      font-weight: 300;
+    }
+
+    .cta-section {
+      background: var(--warm-brown);
+      padding: 5rem 2rem;
+      text-align: center;
+    }
+
+    .cta-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+      color: var(--cream);
+      margin-bottom: 1rem;
+    }
+
+    .cta-section p {
+      color: rgba(250, 247, 242, 0.7);
+      margin-bottom: 2.5rem;
+      font-weight: 300;
+    }
+
+    .cta-form {
+      display: flex;
+      gap: 0.5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 480px;
+      margin: 0 auto;
+    }
+
+    .cta-form input {
+      flex: 1;
+      min-width: 220px;
+      padding: 0.75rem 1.2rem;
+      border: 1px solid rgba(250,247,242,0.3);
+      border-radius: 100px;
+      background: rgba(250,247,242,0.1);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      color: var(--cream);
+      outline: none;
+    }
+
+    .cta-form input::placeholder {
+      color: rgba(250,247,242,0.5);
+    }
+
+    .cta-form input:focus {
+      border-color: rgba(250,247,242,0.6);
+    }
+
+    .btn-secondary {
+      padding: 0.75rem 1.8rem;
+      background: var(--cream);
+      color: var(--warm-brown);
+      border: none;
+      border-radius: 100px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-secondary:hover {
+      background: white;
+      transform: translateY(-1px);
+    }
+
+    .cta-note {
+      font-size: 0.78rem;
+      color: rgba(250,247,242,0.5);
+      margin-top: 1rem;
+    }
+
+    footer {
+      padding: 2rem;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 680px) {
+      .hero, .what-section {
+        grid-template-columns: 1fr;
+        padding: 3rem 1.5rem;
+        gap: 2.5rem;
+      }
+
+      .hero { padding-top: 3rem; }
+    }
+
+    .success-msg {
+      display: none;
+      color: var(--warm-brown);
+      font-size: 0.9rem;
+      margin-top: 0.75rem;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">PetPaint</div>
+  <a href="#waitlist" class="nav-cta">Join waitlist</a>
+</nav>
+
+<section class="hero">
+  <div class="hero-text">
+    <p class="section-label">Coming soon</p>
+    <h1>They live in your heart forever.<br><em>Here's something to remember them by.</em></h1>
+    <p>Upload a photo of your pet. Get back a beautiful oil painting — ready to print, frame, or keep forever. Built specifically for cat and dog owners who want more than a filter.</p>
+
+    <div id="waitlist">
+      <form class="waitlist-form" onsubmit="handleSubmit(event, 'hero')">
+        <input type="email" id="hero-email" placeholder="your@email.com" required>
+        <button type="submit" class="btn-primary">Join the waitlist</button>
+      </form>
+      <p class="form-note">No spam. Just an early access invite when we launch.</p>
+      <p class="success-msg" id="hero-success">You're on the list. We'll be in touch soon.</p>
+    </div>
+  </div>
+
+  <div class="hero-image">
+    <div class="image-compare" style="position:relative;">
+      <div class="img-card">
+        <div class="img-card-label">Your photo</div>
+        <div class="img-placeholder">🐱</div>
+      </div>
+      <div class="img-card">
+        <div class="img-card-label">Oil painting</div>
+        <div class="img-placeholder painted">🎨</div>
+      </div>
+      <div class="arrow-divider">→</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section class="what-section">
+  <div>
+    <p class="section-label">What it is</p>
+    <h2>A dedicated tool for your most important family member.</h2>
+    <p>Upload a photo, choose your oil painting style — Impressionist, Realist, Romantic — and receive a high-quality portrait of your pet. Use it however you like: print it, frame it, put it on a phone case, or simply keep it forever.</p>
+  </div>
+
+  <div>
+    <p class="section-label">How it's different</p>
+    <ul class="diff-list">
+      <li class="diff-item">
+        <div class="diff-icon">🐾</div>
+        <div>
+          <h3>Built only for pets</h3>
+          <p>Not a generic tool. Every detail is optimised for cats and dogs — fur texture, eyes, the way light catches their coat.</p>
+        </div>
+      </li>
+      <li class="diff-item">
+        <div class="diff-icon">🖼</div>
+        <div>
+          <h3>Real AI, not a filter</h3>
+          <p>Built specifically for capturing your cat or dog in a timeless oil painting. Not a quick preset — a dedicated AI model.</p>
+        </div>
+      </li>
+      <li class="diff-item">
+        <div class="diff-icon">🎨</div>
+        <div>
+          <h3>Multiple oil painting styles</h3>
+          <p>Choose from Impressionist, Realist, Romantic, and more. Each style is distinct, not just a colour filter.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Be the first to know.</h2>
+  <p>We're building something special for pet owners. Join the waitlist for early access.</p>
+  <form class="cta-form" onsubmit="handleSubmit(event, 'cta')">
+    <input type="email" id="cta-email" placeholder="your@email.com" required>
+    <button type="submit" class="btn-secondary">Get early access</button>
+  </form>
+  <p class="cta-note" id="cta-success" style="display:none; color: rgba(250,247,242,0.9); font-weight:500;">You're on the list.</p>
+  <p class="cta-note">No spam. Early access only.</p>
+</section>
+
+<footer>
+  <p>© 2025 PetPaint. Made with love for pets.</p>
+</footer>
+
+<script>
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeQiSPLuIk7aOI7QbZhyniXBfS8nbW1ad8B56MYQzmJh91yYw/formResponse';
+  const ENTRY_ID = 'entry.1472782051';
+
+  function handleSubmit(e, source) {
+    e.preventDefault();
+    const email = document.getElementById(source + '-email').value;
+
+    const form = document.createElement('form');
+    form.action = FORM_URL;
+    form.method = 'POST';
+    form.target = 'hidden_iframe';
+
+    const input = document.createElement('input');
+    input.name = ENTRY_ID;
+    input.value = email;
+    form.appendChild(input);
+    document.body.appendChild(form);
+    form.submit();
+    document.body.removeChild(form);
+
+    if (source === 'hero') {
+      document.getElementById('hero-success').style.display = 'block';
+      document.getElementById('hero-email').value = '';
+    } else {
+      document.getElementById('cta-success').style.display = 'block';
+      document.getElementById('cta-email').value = '';
+    }
+  }
+</script>
+
+<iframe name="hidden_iframe" style="display:none;"></iframe>
+
+</body>
+</html>
