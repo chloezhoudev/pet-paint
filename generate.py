@@ -25,7 +25,7 @@ image = image.resize((512, 512))
 result = pipe(
     prompt="oil painting, thick impasto brushstrokes, painterly, warm golden tones, detailed fur texture, fine art",
     image=image,
-    strength=0.45,
+    strength=0.55,
     guidance_scale=7.5,
 ).images[0]
 
