@@ -491,10 +491,12 @@
     document.body.removeChild(form);
 
     if (source === 'hero') {
-      document.getElementById('hero-success').style.display = 'block';
+      const msg = document.getElementById('hero-success');
+      msg.style.setProperty('display', 'block', 'important');
       document.getElementById('hero-email').value = '';
     } else {
-      document.getElementById('cta-success').style.display = 'block';
+      const msg = document.getElementById('cta-success');
+      msg.style.setProperty('display', 'block', 'important');
       document.getElementById('cta-email').value = '';
     }
   }
