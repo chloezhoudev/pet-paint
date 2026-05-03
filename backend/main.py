@@ -6,25 +6,29 @@ import torch
 from diffusers import StableDiffusionImg2ImgPipeline
 import io
 import uuid
+import os
 
 # 创建 FastAPI app
 app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=os.getenv("ALLOWED_ORIGINS", "*").split(","),
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 # 加载模型（只加载一次）
 model_id = "runwayml/stable-diffusion-v1-5"
+device = os.getenv("DEVICE", "mps")
+dtype = torch.float16 if device == "cuda" else torch.float32
+
 pipe = StableDiffusionImg2ImgPipeline.from_pretrained(
     model_id,
-    torch_dtype=torch.float32,
+    torch_dtype=dtype,
     safety_checker=None,
 )
-pipe = pipe.to("mps")
+pipe = pipe.to(device)
 
 @app.post("/generate")
 async def generate(file: UploadFile = File(...)):
