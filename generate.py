@@ -36,7 +36,7 @@ result = pipe(
     control_image=control_image,   # 边缘图：提供结构约束
     strength=0.55,
     guidance_scale=7.5,
-    controlnet_conditioning_scale=0.8,  # ControlNet 影响强度，1.0=完全遵守，0=忽略
+    controlnet_conditioning_scale=1.0,  # ControlNet 影响强度，1.0=完全遵守，0=忽略
 ).images[0]
 
 # 7. 保存结果
