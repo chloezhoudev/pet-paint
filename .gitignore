@@ -3,3 +3,4 @@ output.jpg
 pet.jpg
 __pycache__/
 models/
+backend/classipeintxl.safetensors
