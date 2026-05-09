@@ -34,7 +34,7 @@ result = pipe(
     prompt="oil painting, thick impasto brushstrokes, painterly, warm golden tones, detailed fur texture, fine art",
     image=image,                   # 原图：提供颜色和内容
     control_image=control_image,   # 边缘图：提供结构约束
-    strength=0.55,
+    strength=0.4,
     guidance_scale=7.5,
     controlnet_conditioning_scale=1.0,  # ControlNet 影响强度，1.0=完全遵守，0=忽略
 ).images[0]
